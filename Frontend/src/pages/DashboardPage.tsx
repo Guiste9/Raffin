@@ -59,6 +59,10 @@ export default function DashboardPage() {
           <button className="text-sm text-gray-400 hover:text-white transition-colors">
             Minhas cotas
           </button>
+          <button onClick={() => navigate('/profile')} className="text-sm text-gray-400hover:text-white transition-colors">
+            Meu perfil
+          </button>
+
           <div className="flex items-center gap-3 pl-4 border-l border-gray-800">
             <div className="text-right">
               <p className="text-xs text-gray-400">{shortAddress}</p>
