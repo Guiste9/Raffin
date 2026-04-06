@@ -1,6 +1,6 @@
 import { useWallet } from '../hooks/useWallet'
 import { useNavigate } from 'react-router-dom'
-import PropertyCard from '../components/PropertyCard'
+import PropertyCard from '../Components/PropertyCard'
 
 const MOCK_PROPERTIES = [
   {

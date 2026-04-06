@@ -12,6 +12,7 @@
   "type": "commonjs",
   "dependencies": {
     "@tailwindcss/vite": "^4.2.2",
+    "dotenv": "^17.4.1",
     "tailwindcss": "^4.2.2"
   }
 }

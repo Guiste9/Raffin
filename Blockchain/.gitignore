@@ -18,3 +18,7 @@
 
 # Hardhat coverage reports
 /coverage
+
+#environment variables
+.env
+.env.local
