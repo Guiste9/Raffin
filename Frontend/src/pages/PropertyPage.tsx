@@ -194,6 +194,9 @@ export default function PropertyPage() {
                 >
                   {isPending ? 'Aguardando carteira...' : isConfirming ? 'Confirmando na blockchain...' : 'Comprar cotas'}
                 </button>
+                <button onClick={() => navigate(`/property/${id}/book`)}className="w-full py-3 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-xl transition-colors mt-2"> 
+                   Reservar estadia
+                </button>
 
                 {txHash && (
                   <a

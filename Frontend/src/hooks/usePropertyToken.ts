@@ -1,5 +1,5 @@
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
-import { parseEther, formatEther } from 'viem'
+import { formatEther } from 'viem'
 import { PROPERTY_TOKEN_ADDRESS, PROPERTY_TOKEN_ABI } from '../lib/contracts'
 
 export function usePropertyToken() {

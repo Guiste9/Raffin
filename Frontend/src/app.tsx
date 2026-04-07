@@ -9,6 +9,7 @@ import ConnectPage from './pages/ConnectPage'
 import PropertyPage from './pages/PropertyPage'
 import CreatePropertyPage from './pages/CreatePropertyPage'
 import ProfilePage from './pages/ProfilePage'
+import BookingPage from './pages/BookingPage'
 
 const queryClient = new QueryClient()
 
@@ -18,6 +19,7 @@ function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/property/:id/book" element={isConnected ? <BookingPage /> : <Navigate to="/connect" />} />
         <Route path="/profile" element={isConnected ? <ProfilePage /> : <Navigate to="/connect" />} />
         <Route path="/property/create" element={isConnected ? <CreatePropertyPage /> : <Navigate to="/connect" />} />
         <Route path="/property/:id" element={isConnected ? <PropertyPage /> : <Navigate to="/connect" />} />
