@@ -10,9 +10,6 @@ export default function BookingPage() {
   const { address } = useWallet()
   const { sharesOwned } = useUserProfile(address)
   const { dailyRate, dailyRateRaw, dailyRateLoading, bookStay, isPending, isConfirming, isSuccess, txHash } = usePropertyMarket()
-  console.log('dailyRate:', dailyRate)
-console.log('dailyRateRaw:', dailyRateRaw)
-console.log('dailyRateLoading:', dailyRateLoading)
 
   const today = new Date()
   today.setHours(0, 0, 0, 0)
