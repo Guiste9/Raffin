@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useDeployContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useState, useEffect } from 'react'
+import { useDeployContract, useWaitForTransactionReceipt, usePublicClient } from 'wagmi'
 import { parseEther } from 'viem'
 import { uploadImageToIPFS } from '../lib/pinata'
 
@@ -42,6 +42,33 @@ export function useCreateProperty() {
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash: txHash,
   })
+  const publicClient = usePublicClient()
+
+useEffect(() => {
+  async function saveContractAddress() {
+    if (!isSuccess || !txHash || !publicClient) return
+
+    try {
+      const receipt = await publicClient.getTransactionReceipt({ hash: txHash })
+      if (!receipt.contractAddress) return
+
+      const stored = localStorage.getItem('myProperties')
+      const myProperties = stored ? JSON.parse(stored) : []
+
+      myProperties.push({
+        address: receipt.contractAddress,
+        createdAt: new Date().toISOString(),
+      })
+
+      localStorage.setItem('myProperties', JSON.stringify(myProperties))
+      console.log('contrato salvo:', receipt.contractAddress)
+    } catch (err) {
+      console.error('erro ao salvar contrato:', err)
+    }
+  }
+
+  saveContractAddress()
+}, [isSuccess, txHash])
 
   async function createProperty(form: CreatePropertyForm) {
     setUploadError(null)

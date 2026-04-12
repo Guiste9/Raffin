@@ -53,7 +53,7 @@ export default function DashboardPage() {
           RaffChain
         </h1>
         <div className="flex items-center gap-6">
-          <button className="text-sm text-gray-400 hover:text-white transition-colors">
+          <button onClick={() => navigate('/my-properties')} className="text-sm text-gray-400 hover:text-white transition-colors">
             Meus imóveis
           </button>
           <button className="text-sm text-gray-400 hover:text-white transition-colors">
