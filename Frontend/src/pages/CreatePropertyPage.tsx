@@ -32,12 +32,26 @@ export default function CreatePropertyPage() {
   }
 
   async function handleSubmit() {
-    if (!form.name || !form.symbol || !form.description || !form.location || !form.totalShares || !form.pricePerShare || !form.dailyRate) {
-      alert('Preencha todos os campos.')
-      return
-    }
-    await createProperty(form)
+  console.log('handleSubmit chamado')
+  console.log('form:', form)
+
+  if (!form.name || !form.symbol || !form.description || !form.location || !form.totalShares || !form.pricePerShare || !form.dailyRate) {
+    alert('Preencha todos os campos.')
+    return
   }
+
+  if (!form.image) {
+    alert('Selecione uma imagem.')
+    return
+  }
+
+  console.log('chamando createProperty...')
+  try {
+    await createProperty(form)
+  } catch (err) {
+    console.error('erro no createProperty:', err)
+  }
+}
 
   if (isSuccess) {
     return (
