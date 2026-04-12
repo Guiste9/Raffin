@@ -1,54 +1,23 @@
-type Approval @entity(immutable: true) {
-  id: Bytes!
-  owner: Bytes! # address
-  spender: Bytes! # address
-  value: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Property @entity(immutable: false) {
+  id: ID!
+  address: String!
+  name: String!
+  symbol: String!
+  owner: String!
+  totalShares: BigInt!
+  pricePerShare: BigInt!
+  propertyAddress: String!
+  propertyImageIPFS: String!
+  propertyDescription: String!
+  saleActive: Boolean!
+  createdAt: BigInt!
 }
 
-type OwnershipTransferred @entity(immutable: true) {
-  id: Bytes!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type PropertyMetadataUpdated @entity(immutable: true) {
-  id: Bytes!
-  newImageIPFS: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type SaleStatusChanged @entity(immutable: true) {
-  id: Bytes!
-  isActive: Boolean! # bool
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type SharesPurchased @entity(immutable: true) {
-  id: Bytes!
-  buyer: Bytes! # address
-  bought: BigInt! # uint256
-  amountPaid: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Transfer @entity(immutable: true) {
-  id: Bytes!
-  from: Bytes! # address
-  to: Bytes! # address
-  value: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type SharePurchase @entity(immutable: true) {
+  id: ID!
+  property: Property!
+  buyer: String!
+  amount: BigInt!
+  totalPaid: BigInt!
+  createdAt: BigInt!
 }
