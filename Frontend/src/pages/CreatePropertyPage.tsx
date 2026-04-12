@@ -1,18 +1,21 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useCreateProperty } from '../hooks/useCreateProperty'
 
 export default function CreatePropertyPage() {
   const navigate = useNavigate()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const { createProperty, isUploading, isPending, isConfirming, isSuccess, uploadError } = useCreateProperty()
 
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [form, setForm] = useState({
     name: '',
+    symbol: '',
     description: '',
     location: '',
     totalShares: '',
     pricePerShare: '',
     dailyRate: '',
+    image: null as File | null,
   })
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -22,22 +25,39 @@ export default function CreatePropertyPage() {
   function handleImage(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
+    setForm({ ...form, image: file })
     const reader = new FileReader()
     reader.onload = () => setImagePreview(reader.result as string)
     reader.readAsDataURL(file)
   }
 
   async function handleSubmit() {
-    if (!form.name || !form.description || !form.location || !form.totalShares || !form.pricePerShare || !form.dailyRate) {
+    if (!form.name || !form.symbol || !form.description || !form.location || !form.totalShares || !form.pricePerShare || !form.dailyRate) {
       alert('Preencha todos os campos.')
       return
     }
-    setIsSubmitting(true)
-    await new Promise((r) => setTimeout(r, 2000))
-    setIsSubmitting(false)
-    alert('Imóvel tokenizado com sucesso! (simulado)')
-    navigate('/dashboard')
+    await createProperty(form)
   }
+
+  if (isSuccess) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-10 text-center max-w-md">
+          <div className="text-5xl mb-4">🎉</div>
+          <h2 className="text-2xl font-bold text-white mb-2">Imóvel tokenizado!</h2>
+          <p className="text-gray-400 mb-6">Seu imóvel foi deployado na blockchain com sucesso.</p>
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-colors"
+          >
+            Ver imóveis
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  const isLoading = isUploading || isPending || isConfirming
 
   return (
     <div className="min-h-screen bg-gray-950 text-white">
@@ -62,20 +82,38 @@ export default function CreatePropertyPage() {
           <p className="text-gray-400">Crie cotas do seu imóvel e venda para investidores.</p>
         </div>
 
-        <div className="flex flex-col gap-6">
+        {uploadError && (
+          <div className="bg-red-900/30 border border-red-800 rounded-xl p-4 mb-6">
+            <p className="text-red-400 text-sm">{uploadError}</p>
+          </div>
+        )}
 
+        <div className="flex flex-col gap-6">
           <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col gap-4">
             <h3 className="font-semibold text-white">Informações do imóvel</h3>
 
-            <div>
-              <label className="text-sm text-gray-400 mb-1 block">Nome do imóvel</label>
-              <input
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Ex: Apartamento Meireles"
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-gray-400 mb-1 block">Nome do imóvel</label>
+                <input
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="Ex: Apartamento Meireles"
+                  className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-gray-400 mb-1 block">Símbolo do token</label>
+                <input
+                  name="symbol"
+                  value={form.symbol}
+                  onChange={handleChange}
+                  placeholder="Ex: APTMEI"
+                  maxLength={6}
+                  className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors uppercase"
+                />
+              </div>
             </div>
 
             <div>
@@ -84,7 +122,7 @@ export default function CreatePropertyPage() {
                 name="location"
                 value={form.location}
                 onChange={handleChange}
-                placeholder="Ex: Fortaleza, CE"
+                placeholder="Ex: Meireles, Fortaleza, CE"
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
               />
             </div>
@@ -102,7 +140,10 @@ export default function CreatePropertyPage() {
             </div>
 
             <div>
-              <label className="text-sm text-gray-400 mb-2 block">Imagem do imóvel</label>
+              <label className="text-sm text-gray-400 mb-2 block">
+                Imagem do imóvel
+                <span className="text-indigo-400 ml-1 text-xs">(será enviada para o IPFS)</span>
+              </label>
               <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-700 rounded-xl cursor-pointer hover:border-indigo-500 transition-colors overflow-hidden">
                 {imagePreview ? (
                   <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
@@ -110,7 +151,6 @@ export default function CreatePropertyPage() {
                   <div className="text-center">
                     <p className="text-gray-400 text-sm">Clique para fazer upload</p>
                     <p className="text-gray-600 text-xs mt-1">PNG, JPG até 10MB</p>
-                    <p className="text-indigo-400 text-xs mt-1">Será enviado para o IPFS</p>
                   </div>
                 )}
                 <input
@@ -139,7 +179,6 @@ export default function CreatePropertyPage() {
                   className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
                 />
               </div>
-
               <div>
                 <label className="text-sm text-gray-400 mb-1 block">Preço por cota (ETH)</label>
                 <input
@@ -196,10 +235,16 @@ export default function CreatePropertyPage() {
 
           <button
             onClick={handleSubmit}
-            disabled={isSubmitting}
+            disabled={isLoading}
             className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors text-lg"
           >
-            {isSubmitting ? 'Enviando para blockchain...' : 'Tokenizar imóvel'}
+            {isUploading
+              ? 'Enviando imagem para IPFS...'
+              : isPending
+              ? 'Aguardando carteira...'
+              : isConfirming
+              ? 'Deployando contrato...'
+              : 'Tokenizar imóvel'}
           </button>
         </div>
       </main>
