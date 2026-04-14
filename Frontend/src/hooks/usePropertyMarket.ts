@@ -10,10 +10,7 @@ export function usePropertyMarket() {
     address: PROPERTY_MARKET_ADDRESS,
     abi: PROPERTY_MARKET_ABI,
     functionName: 'dailyRate',
-    query: {
-      retry: 3,
-      retryDelay: 1000,
-    }
+    query: { retry: 3, retryDelay: 1000 }
   })
 
   const { data: bookingCount } = useReadContract({
@@ -27,9 +24,6 @@ export function usePropertyMarket() {
     abi: PROPERTY_MARKET_ABI,
     functionName: 'maintenanceFund',
   })
-
-  console.log('dailyRate raw:', dailyRate)
-  console.log('dailyRate error:', dailyRateError)
 
   function bookStay(checkIn: Date, checkOut: Date) {
     if (!dailyRate) {

@@ -2,12 +2,16 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useWallet } from '../hooks/useWallet'
 import { usePropertyToken } from '../hooks/usePropertyToken'
+import { ipfsToHttp } from '../lib/pinata'
 
 export default function PropertyPage() {
   const { id } = useParams()
-  const navigate = useNavigate()
-  const { address, balance } = useWallet()
-  const [shareAmount, setShareAmount] = useState(1)
+const navigate = useNavigate()
+const { address, balance } = useWallet()
+const [shareAmount, setShareAmount] = useState(1)
+
+const isRealProperty = id?.startsWith('0x') ?? false
+const contractAddress = isRealProperty ? id as `0x${string}` : undefined
 
   const {
     name,
@@ -21,10 +25,9 @@ export default function PropertyPage() {
     isPending,
     isConfirming,
     isSuccess,
-    txHash
-  } = usePropertyToken()
-
-  const isRealProperty = id === '1'
+    txHash,
+    propertyImageIPFS,
+  } = usePropertyToken(contractAddress)
 
   const MOCK_PROPERTIES: Record<string, any> = {
     '2': {
@@ -86,13 +89,13 @@ export default function PropertyPage() {
     ? Math.round(((displayTotalShares - displayAvailableShares) / displayTotalShares) * 100)
     : 0
 
-  const imageUrl = isRealProperty
+  const imageUrl = isRealProperty && propertyImageIPFS
+    ? ipfsToHttp(propertyImageIPFS)
+    : isRealProperty
     ? 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800'
     : mock?.imageUrl
 
-  const amenities = isRealProperty
-    ? ['Vista mar', 'Piscina', 'Academia', 'Varanda', 'Segurança 24h']
-    : mock?.amenities
+  const amenities = isRealProperty ? [] : mock?.amenities
 
   function handleBuy() {
     if (isRealProperty) {

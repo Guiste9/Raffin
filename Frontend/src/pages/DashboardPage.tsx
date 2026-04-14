@@ -1,43 +1,13 @@
 import { useWallet } from '../hooks/useWallet'
 import { useNavigate } from 'react-router-dom'
-import PropertyCard from '../Components/PropertyCard'
-
-const MOCK_PROPERTIES = [
-  {
-    id: '1',
-    name: 'Apartamento Meireles',
-    description: 'Apartamento de luxo com vista para o mar, 3 quartos, varanda gourmet e lazer completo.',
-    imageUrl: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800',
-    pricePerShare: '0.05',
-    availableShares: 12,
-    totalShares: 20,
-    location: 'Fortaleza, CE',
-  },
-  {
-    id: '2',
-    name: 'Casa Guarajuba',
-    description: 'Casa de praia espaçosa com piscina privativa, 4 quartos e acesso direto à praia.',
-    imageUrl: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800',
-    pricePerShare: '0.08',
-    availableShares: 5,
-    totalShares: 20,
-    location: 'Guarajuba, BA',
-  },
-  {
-    id: '3',
-    name: 'Cobertura Ponta Verde',
-    description: 'Cobertura duplex com terraço, churrasqueira e vista panorâmica da cidade.',
-    imageUrl: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800',
-    pricePerShare: '0.12',
-    availableShares: 18,
-    totalShares: 20,
-    location: 'Maceió, AL',
-  },
-]
+import { useAllProperties } from '../hooks/useGraph'
+import { formatEther } from 'viem'
+import { ipfsToHttp } from '../lib/pinata'
 
 export default function DashboardPage() {
   const { address, balance, disconnect } = useWallet()
   const navigate = useNavigate()
+  const { properties, isLoading: propertiesLoading } = useAllProperties()
 
   const shortAddress = address
     ? `${address.slice(0, 6)}...${address.slice(-4)}`
@@ -104,11 +74,62 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {MOCK_PROPERTIES.map((property) => (
-            <PropertyCard key={property.id} {...property} />
-          ))}
+        {propertiesLoading ? (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {[1,2,3].map(i => (
+      <div key={i} className="bg-gray-900 border border-gray-800 rounded-2xl p-6 animate-pulse">
+        <div className="h-48 bg-gray-800 rounded-xl mb-4" />
+        <div className="h-4 bg-gray-800 rounded w-2/3 mb-2" />
+        <div className="h-3 bg-gray-800 rounded w-1/2" />
+      </div>
+    ))}
+  </div>
+) : properties.length === 0 ? (
+  <div className="bg-gray-900 border border-gray-800 rounded-xl p-10 text-center">
+    <p className="text-gray-500">Nenhum imóvel disponível ainda.</p>
+  </div>
+) : (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {properties.map((property) => (
+      <div
+        key={property.id}
+        className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden hover:border-indigo-500 transition-colors cursor-pointer group"
+        onClick={() => navigate(`/property/${property.address}`)}
+      >
+        <div className="relative h-48 overflow-hidden">
+          <img
+            src={ipfsToHttp(property.propertyImageIPFS)}
+            alt={property.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+          <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-lg">
+            {property.symbol}
+          </div>
         </div>
+        <div className="p-5">
+          <h3 className="font-semibold text-white text-lg mb-1">{property.name}</h3>
+          <p className="text-gray-400 text-sm mb-3">📍 {property.propertyAddress}</p>
+          <p className="text-gray-500 text-sm mb-4 line-clamp-2">{property.propertyDescription}</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs text-gray-400">Preço por cota</p>
+              <p className="text-indigo-400 font-bold">
+                {formatEther(BigInt(property.pricePerShare))} ETH
+              </p>
+            </div>
+            <span className={`text-xs px-2 py-1 rounded-lg ${
+              property.saleActive
+                ? 'bg-emerald-900 text-emerald-400'
+                : 'bg-gray-800 text-gray-400'
+            }`}>
+              {property.saleActive ? 'Venda ativa' : 'Inativa'}
+            </span>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
       </main>
     </div>
   )

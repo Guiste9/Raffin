@@ -2,50 +2,58 @@ import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 
 import { formatEther } from 'viem'
 import { PROPERTY_TOKEN_ADDRESS, PROPERTY_TOKEN_ABI } from '../lib/contracts'
 
-export function usePropertyToken() {
+export function usePropertyToken(contractAddress?: `0x${string}`) {
+  const address = contractAddress ?? PROPERTY_TOKEN_ADDRESS
+
   const { writeContract, data: txHash, isPending } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash: txHash })
 
   const { data: name } = useReadContract({
-    address: PROPERTY_TOKEN_ADDRESS,
+    address,
     abi: PROPERTY_TOKEN_ABI,
     functionName: 'name',
   })
 
   const { data: totalShares } = useReadContract({
-    address: PROPERTY_TOKEN_ADDRESS,
+    address,
     abi: PROPERTY_TOKEN_ABI,
     functionName: 'totalShares',
   })
 
   const { data: pricePerShare } = useReadContract({
-    address: PROPERTY_TOKEN_ADDRESS,
+    address,
     abi: PROPERTY_TOKEN_ABI,
     functionName: 'pricePerShare',
   })
 
   const { data: availableShares } = useReadContract({
-    address: PROPERTY_TOKEN_ADDRESS,
+    address,
     abi: PROPERTY_TOKEN_ABI,
     functionName: 'availableShares',
   })
 
   const { data: propertyDescription } = useReadContract({
-    address: PROPERTY_TOKEN_ADDRESS,
+    address,
     abi: PROPERTY_TOKEN_ABI,
     functionName: 'propertyDescription',
   })
 
   const { data: propertyAddress } = useReadContract({
-    address: PROPERTY_TOKEN_ADDRESS,
+    address,
     abi: PROPERTY_TOKEN_ABI,
     functionName: 'propertyAddress',
   })
 
   const { data: saleActive } = useReadContract({
-    address: PROPERTY_TOKEN_ADDRESS,
+    address,
     abi: PROPERTY_TOKEN_ABI,
     functionName: 'saleActive',
+  })
+
+  const { data: propertyImageIPFS } = useReadContract({
+    address,
+    abi: PROPERTY_TOKEN_ABI,
+    functionName: 'propertyImageIPFS',
   })
 
   function purchaseShares(amount: number) {
@@ -53,7 +61,7 @@ export function usePropertyToken() {
     const totalCost = BigInt(amount) * (pricePerShare as bigint)
 
     writeContract({
-      address: PROPERTY_TOKEN_ADDRESS,
+      address,
       abi: PROPERTY_TOKEN_ABI,
       functionName: 'purchaseShares',
       args: [BigInt(amount)],
@@ -68,6 +76,7 @@ export function usePropertyToken() {
     availableShares: availableShares ? Number(availableShares) : undefined,
     propertyDescription: propertyDescription as string | undefined,
     propertyAddress: propertyAddress as string | undefined,
+    propertyImageIPFS: propertyImageIPFS as string | undefined,
     saleActive: saleActive as boolean | undefined,
     purchaseShares,
     isPending,

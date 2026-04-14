@@ -1,15 +1,37 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useWallet } from '../hooks/useWallet'
 import { usePropertyMarket } from '../hooks/usePropertyMarket'
-import { useUserProfile } from '../hooks/useUserProfile'
+import { useReadContract } from 'wagmi'
+import { PROPERTY_TOKEN_ABI } from '../lib/contracts'
 import { formatEther } from 'viem'
 
 export default function BookingPage() {
+  const { id } = useParams()
   const navigate = useNavigate()
   const { address } = useWallet()
-  const { sharesOwned } = useUserProfile(address)
+  const contractAddress = id as `0x${string}`
+
   const { dailyRate, dailyRateRaw, dailyRateLoading, bookStay, isPending, isConfirming, isSuccess, txHash } = usePropertyMarket()
+
+  const { data: balanceRaw } = useReadContract({
+    address: contractAddress,
+    abi: PROPERTY_TOKEN_ABI,
+    functionName: 'balanceOf',
+    args: address ? [address] : undefined,
+    query: { enabled: !!address },
+  })
+
+  const { data: decimals } = useReadContract({
+    address: contractAddress,
+    abi: PROPERTY_TOKEN_ABI,
+    functionName: 'decimals',
+  })
+
+  const dec = decimals ? Number(decimals) : 18
+  const sharesOwned = balanceRaw
+    ? Number(BigInt(balanceRaw as bigint) / BigInt(10 ** dec))
+    : 0
 
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -31,7 +53,7 @@ export default function BookingPage() {
   useEffect(() => {
     if (isSuccess) {
       alert('Reserva confirmada na blockchain!')
-      navigate('/profile')
+      navigate(`/property/${id}`)
     }
   }, [isSuccess])
 
@@ -51,7 +73,7 @@ export default function BookingPage() {
     <div className="min-h-screen bg-gray-950 text-white">
       <nav className="border-b border-gray-800 px-6 py-4 flex items-center gap-4">
         <button
-          onClick={() => navigate('/property/1')}
+          onClick={() => navigate(`/property/${id}`)}
           className="text-gray-400 hover:text-white transition-colors text-sm"
         >
           ← Voltar
@@ -67,17 +89,16 @@ export default function BookingPage() {
       <main className="max-w-lg mx-auto px-6 py-10">
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-white mb-2">Reservar estadia</h2>
-          <p className="text-gray-400">Apartamento Meireles · Fortaleza, CE</p>
+          <p className="text-gray-400">
+            {dailyRateLoading ? 'Carregando diária...' : `Diária: ${dailyRate} ETH`}
+          </p>
         </div>
-        <span className="text-white">
-            {dailyRateLoading ? 'Carregando...' : `${dailyRate} ETH`}
-        </span>
 
         {sharesOwned <= 0 ? (
           <div className="bg-red-900/30 border border-red-800 rounded-2xl p-6 text-center">
             <p className="text-red-400 mb-4">Você precisa ter cotas deste imóvel para reservar.</p>
             <button
-              onClick={() => navigate('/property/1')}
+              onClick={() => navigate(`/property/${id}`)}
               className="py-2 px-6 bg-indigo-600 hover:bg-indigo-500 text-white text-sm rounded-xl transition-colors"
             >
               Comprar cotas
@@ -87,7 +108,6 @@ export default function BookingPage() {
           <div className="flex flex-col gap-6">
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col gap-4">
               <h3 className="font-semibold text-white">Selecione as datas</h3>
-
               <div>
                 <label className="text-sm text-gray-400 mb-1 block">Check-in</label>
                 <input
@@ -98,7 +118,6 @@ export default function BookingPage() {
                   className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-colors"
                 />
               </div>
-
               <div>
                 <label className="text-sm text-gray-400 mb-1 block">Check-out</label>
                 <input
@@ -113,7 +132,6 @@ export default function BookingPage() {
 
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
               <h3 className="font-semibold text-white mb-4">Resumo</h3>
-
               <div className="flex flex-col gap-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-400">Diária</span>
@@ -142,9 +160,8 @@ export default function BookingPage() {
               {isPending ? 'Aguardando carteira...' : isConfirming ? 'Confirmando na blockchain...' : 'Confirmar reserva'}
             </button>
 
-            {txHash && (
-                <a
-                href={`https://sepolia.etherscan.io/tx/${txHash}`}
+            {txHash && (   
+               <a href={`https://sepolia.etherscan.io/tx/${txHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block text-center text-xs text-indigo-400 hover:text-indigo-300"

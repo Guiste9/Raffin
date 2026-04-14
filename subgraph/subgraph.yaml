@@ -5,12 +5,33 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
+    name: PropertyFactory
+    network: sepolia
+    source:
+      address: "0x1481d2D1f8667938D5c1211CDf441a46af20B1f8"
+      abi: PropertyFactory
+      startBlock: 8100000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Property
+      abis:
+        - name: PropertyFactory
+          file: ./abis/PropertyFactory.json
+        - name: PropertyToken
+          file: ./abis/PropertyToken.json
+      eventHandlers:
+        - event: PropertyCreated(indexed address,indexed address,string,string)
+          handler: handlePropertyCreated
+      file: ./src/factory.ts
+templates:
+  - kind: ethereum
     name: PropertyToken
     network: sepolia
     source:
-      address: "0xCB71915479db29136E6eA6bc92D385Ee3CFFA2C0"
       abi: PropertyToken
-      startBlock: 7800000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
