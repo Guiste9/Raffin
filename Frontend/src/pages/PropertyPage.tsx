@@ -197,8 +197,11 @@ const contractAddress = isRealProperty ? id as `0x${string}` : undefined
                 >
                   {isPending ? 'Aguardando carteira...' : isConfirming ? 'Confirmando na blockchain...' : 'Comprar cotas'}
                 </button>
-                <button onClick={() => navigate(`/property/${id}/book`)}className="w-full py-3 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-xl transition-colors mt-2"> 
-                   Reservar estadia
+                <button onClick={() => navigate(`/property/${id}/book`)} className="w-full py-3 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-xl transition-colors mt-2">
+                  Reservar estadia
+                </button>
+                <button onClick={() => navigate('/my-bookings')} className="w-full py-3 bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-300 font-medium rounded-xl transition-colors mt-2">
+                  Minhas reservas
                 </button>
 
                 {txHash && (

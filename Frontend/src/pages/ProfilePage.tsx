@@ -27,6 +27,12 @@ export default function ProfilePage() {
           >
             Imóveis
           </button>
+          <button
+            onClick={() => navigate('/my-bookings')}
+            className="text-sm text-gray-400 hover:text-white transition-colors"
+          >
+            Minhas reservas
+          </button>
           <button className="text-sm text-white font-medium border-b border-indigo-400 pb-0.5">
             Meu perfil
           </button>

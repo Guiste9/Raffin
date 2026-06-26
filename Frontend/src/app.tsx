@@ -10,8 +10,10 @@ import PropertyPage from './pages/PropertyPage'
 import CreatePropertyPage from './pages/CreatePropertyPage'
 import ProfilePage from './pages/ProfilePage'
 import BookingPage from './pages/BookingPage'
+import MyBookingsPage from './pages/MyBookingsPage'
 import MyPropertiesPage from './pages/MyPropertiesPage'
 import ManagePropertyPage from './pages/ManagePropertyPage'
+import ChatWidget from './Components/ChatWidget'
 
 const queryClient = new QueryClient()
 
@@ -23,6 +25,7 @@ function AppRoutes() {
       <Routes>
         <Route path="/my-properties/:address" element={isConnected ? <ManagePropertyPage /> : <Navigate to=" connect" />} />
         <Route path="/property/:id/book" element={isConnected ? <BookingPage /> : <Navigate to="/connect" />} />
+        <Route path="/my-bookings" element={isConnected ? <MyBookingsPage /> : <Navigate to="/connect" />} />
         <Route path="/profile" element={isConnected ? <ProfilePage /> : <Navigate to="/connect" />} />
         <Route path="/property/create" element={isConnected ? <CreatePropertyPage /> : <Navigate to="/connect" />} />
         <Route path="/property/:id" element={isConnected ? <PropertyPage /> : <Navigate to="/connect" />} />
@@ -44,6 +47,7 @@ function App() {
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <AppRoutes />
+        <ChatWidget />
       </QueryClientProvider>
     </WagmiProvider>
   )

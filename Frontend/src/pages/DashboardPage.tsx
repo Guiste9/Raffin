@@ -26,8 +26,8 @@ export default function DashboardPage() {
           <button onClick={() => navigate('/my-properties')} className="text-sm text-gray-400 hover:text-white transition-colors">
             Meus imóveis
           </button>
-          <button className="text-sm text-gray-400 hover:text-white transition-colors">
-            Minhas cotas
+          <button onClick={() => navigate('/my-bookings')} className="text-sm text-gray-400 hover:text-white transition-colors">
+            Minhas reservas
           </button>
           <button onClick={() => navigate('/profile')} className="text-sm text-gray-400hover:text-white transition-colors">
             Meu perfil

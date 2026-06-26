@@ -1,0 +1,52 @@
+[
+    {
+        "id": "o-que-e-multipropriedade",
+        "keywords": ["multipropriedade", "o que é", "como funciona", "conceito", "definição", "frações", "fração"],
+        "content": "Multipropriedade é um regime em que várias pessoas são proprietárias do mesmo imóvel. Cada coproprietário tem o direito de usar o imóvel por um período determinado do ano (ex: 1 ou 2 semanas) e possui uma fração ideal do bem registrada em cartório de forma legal."
+    },
+    {
+        "id": "como-comprar-cota",
+        "keywords": ["comprar", "cota", "adquirir", "fração", "investir", "compra", "pagamento"],
+        "content": "Para comprar uma cota no Raffin, o usuário escolhe o imóvel listado no marketplace, seleciona a fração/período desejado e confirma a compra conectando sua carteira Web3. A transação gera um registro na blockchain que comprova a titularidade daquela cota de forma imediata."
+    },
+    {
+        "id": "papel-da-blockchain",
+        "keywords": ["blockchain", "smart contract", "contrato", "solidity", "token", "nft", "seguro", "criptografia", "rede"],
+        "content": "O Raffin usa contratos inteligentes (escritos em Solidity) na blockchain para registrar a propriedade de cada cota de forma transparente e imutável. Isso elimina a necessidade de intermediários tradicionais para comprovar a titularidade e facilita enormemente a transferência ou revenda."
+    },
+    {
+        "id": "revenda-de-cota",
+        "keywords": ["revender", "vender", "transferir", "repassar", "venda", "liquidez"],
+        "content": "Uma cota comprada no Raffin pode ser revendida por meio do próprio marketplace da plataforma. O proprietário lista sua cota pelo preço desejado e, assim que houver um comprador, o contrato inteligente transfere a titularidade e os fundos de forma automática e segura."
+    },
+    {
+        "id": "garantias-seguranca",
+        "keywords": ["seguro", "garantia", "risco", "segurança", "confiável", "auditoria", "fraude"],
+        "content": "Como os registros de propriedade ficam na blockchain, qualquer pessoa pode auditar o histórico de titularidade de uma cota de forma transparente. Isso elimina fraudes documentais comuns no mercado imobiliário tradicional, embora os riscos de mercado do próprio imóvel continuem existindo."
+    },
+    {
+        "id": "custos-taxas",
+        "keywords": ["taxa", "custo", "comissão", "preço da plataforma", "taxas", "pagar"],
+        "content": "O Raffin cobra uma pequena comissão sobre as transações realizadas no marketplace (tanto na compra original quanto na revenda de cotas). O valor exato da taxa é transparente e exibido ao usuário para confirmação antes de assinar qualquer transação."
+    },
+    {
+        "id": "aluguel-e-rendimento",
+        "keywords": ["alugar", "rendimento", "aluguel", "receita", "lucro", "rentabilidade", "ganhar dinheiro"],
+        "content": "Se o proprietário não desejar utilizar sua cota no período determinado, ele pode disponibilizar sua fração para aluguel dentro da própria plataforma. O pagamento do aluguel é processado via contrato inteligente e enviado diretamente para a carteira do proprietário."
+    },
+    {
+        "id": "como-reservar",
+        "keywords": ["reservar", "reserva", "calendário", "agendar", "hospedar", "estadia", "data", "uso"],
+        "content": "Para agendar sua estadia, acesse o painel 'Reservar' no Raffin, escolha um período disponível correspondente à sua cota de fração e confirme. O agendamento é registrado e validado via contrato inteligente para impedir conflitos ou reservas duplicadas."
+    },
+    {
+        "id": "governanca-e-decisoes",
+        "keywords": ["governança", "votar", "voto", "decisão", "assembleia", "reforma", "decisões"],
+        "content": "Como coproprietário de um imóvel, você tem direito a participar da governança do bem. Isso inclui votar em decisões importantes como reformas, taxas de condomínio extraordinárias ou troca de administradora. As votações ocorrem de maneira descentralizada na plataforma."
+    },
+    {
+        "id": "carteiras-conectividade",
+        "keywords": ["carteira", "wallet", "metamask", "conectar", "login", "conexão"],
+        "content": "Para utilizar o Raffin, você precisa conectar uma carteira Web3 (como MetaMask, Coinbase Wallet ou via WalletConnect). A carteira é sua identidade no sistema, sendo usada para armazenar seus tokens de cota e assinar as transações com segurança."
+    }
+]

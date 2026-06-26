@@ -87,11 +87,19 @@ export default function BookingPage() {
       </nav>
 
       <main className="max-w-lg mx-auto px-6 py-10">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-white mb-2">Reservar estadia</h2>
-          <p className="text-gray-400">
-            {dailyRateLoading ? 'Carregando diária...' : `Diária: ${dailyRate} ETH`}
-          </p>
+        <div className="mb-8 flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-3xl font-bold text-white mb-2">Reservar estadia</h2>
+            <p className="text-gray-400">
+              {dailyRateLoading ? 'Carregando diária...' : `Diária: ${dailyRate} ETH`}
+            </p>
+          </div>
+          <button
+            onClick={() => navigate('/my-bookings')}
+            className="shrink-0 py-2 px-4 bg-gray-800 hover:bg-gray-700 text-sm text-gray-300 rounded-xl transition-colors"
+          >
+            Minhas reservas
+          </button>
         </div>
 
         {sharesOwned <= 0 ? (
